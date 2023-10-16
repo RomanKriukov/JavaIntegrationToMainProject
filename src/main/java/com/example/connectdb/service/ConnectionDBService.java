@@ -9,7 +9,7 @@ public class ConnectionDBService {
 
     public Connection connectToDB(String username, String password){
         Connection connection = null;
-        String urlToDB = "jdbc:sqlserver://192.168.0.208:3306;database=fa;encrypt=true;trustServerCertificate=true";
+        String urlToDB = "jdbc:sqlserver://prometey.net.ua;database=fa;encrypt=true;trustServerCertificate=true";
 
         try{
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
