@@ -7,41 +7,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
 @Controller
-public class LoginController {
+public class FileUploadController {
 
     @Autowired
-    private ConnectionDBService connectionDB;
+    ConnectionDBService connectionDB;
 
     @Autowired
     HttpSession session;
 
-    @GetMapping("/login1")
-    public String showLoginPage() {
-        System.out.println("GET!!!");
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String authenticate(@RequestParam String username, @RequestParam String password) {
-        System.out.println("POST!!!");
-        Connection conn = connectionDB.connectToDB(username, password);
-
-        if (conn != null) {
-            session.setAttribute("username", conn);
-            return "home";
-        } else {
-            return "login";
-        }
-    }
-
-    @GetMapping("/other")
-    public String otherPoint() {
+    @GetMapping("/uploadPage")
+    public String uploadPage() {
         Connection conn = (Connection) session.getAttribute("username");
 
         if (conn != null) {
@@ -63,8 +46,23 @@ public class LoginController {
             }
             System.out.println("Roles: " + str + " | " + session.getId());
             return "home";
-        } else {
-            return "login";
         }
+        return "upload"; // Повертаємо сторінку для завантаження файлу
+    }
+
+    @PostMapping("/upload")
+    public String uploadFile(@RequestParam("excelFile") MultipartFile file) {
+        if (!file.isEmpty()) {
+            try {
+                // Зберігаємо Excel файл на сервері
+                String fileName = file.getOriginalFilename();
+                String filePath = "D:/uploads/"; // Шлях до директорії, де буде збережений файл
+                file.transferTo(new File(filePath + fileName));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return "redirect:/uploadPage"; // Після завантаження повертаємо користувача на сторінку завантаження
     }
 }
+
