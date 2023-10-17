@@ -44,10 +44,10 @@ public class FileUploadController {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            System.out.println("Roles: " + str + " | " + session.getId());
-            return "home";
+            System.out.println("From upload. Roles: " + str + " | " + session.getId());
+            return "upload"; // Повертаємо сторінку для завантаження файлу
         }
-        return "upload"; // Повертаємо сторінку для завантаження файлу
+        return "login"; // Повертаємо сторінку для завантаження файлу
     }
 
     @PostMapping("/upload")
